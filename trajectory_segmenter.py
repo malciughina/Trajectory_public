@@ -18,7 +18,7 @@ def thompson_test(data, point, alpha=0.05):
     return delta > tau * 2*sd
 
 
-def segment_trajectories(alltraj, uid, temporal_thr=120, spatial_thr=50, max_speed=0.07):
+def segment_trajectories(alltraj, uid, temporal_thr=60, spatial_thr=50, max_speed=0.07):
     # temporal_thr = 120 # seconds
     # spatial_thr = 50 # meters
     # max_speed = 0.07 # km/s
@@ -174,14 +174,14 @@ def moving_median(a, w=3):
     return ma
 
 
-def segment_trajectories_user_adaptive(alltraj, uid, temporal_thr=120, spatial_thr=20, max_speed=0.07,
+def segment_trajectories_user_adaptive(alltraj, uid, temporal_thr=60, spatial_thr=50, max_speed=0.07,
                                        gap=60, max_lim=3600*48, window=3, smooth_fun=moving_avg, min_size=10,
                                        return_cut=False):
     traj_list = segment_trajectories(alltraj, uid, temporal_thr, spatial_thr, max_speed)
     stop_time_list = get_stop_times(traj_list)
 
     time_stop_values = range(gap, max_lim + gap, gap)
-    #time_stop_values = np.concatenate([np.arange(60, 60*10, 60), np.arange(60*10, max_lim + gap, gap)])
+    # time_stop_values = np.concatenate([np.arange(60, 60*10, 60), np.arange(60*10, max_lim + gap, gap)])
     stop_time_count, _ = np.histogram(stop_time_list, bins=time_stop_values)
 
     stop_time_count_ma = smooth_fun(stop_time_count[::-1], window)
@@ -191,7 +191,7 @@ def segment_trajectories_user_adaptive(alltraj, uid, temporal_thr=120, spatial_t
     for cut in range(len(stop_time_count_ma) - 1, min_size, -1):
         if thompson_test(stop_time_count_ma[:cut], stop_time_count_ma[cut]):
             #  and time_stop_values_ma[cut] > time_stop_values_ma[cut]:
-            print(cut, stop_time_count_ma[cut], time_stop_values_ma[cut])
+            # print(cut, stop_time_count_ma[cut], time_stop_values_ma[cut])
             user_temporal_thr = time_stop_values_ma[cut]
             break
 

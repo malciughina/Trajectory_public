@@ -22,6 +22,7 @@ def segment_trajectories(alltraj, uid, temporal_thr=60, spatial_thr=50, max_spee
     # temporal_thr = 120 # seconds
     # spatial_thr = 50 # meters
     # max_speed = 0.07 # km/s
+    spatial_thr = spatial_thr / 1000
 
     traj_list = list()
 
@@ -33,12 +34,18 @@ def segment_trajectories(alltraj, uid, temporal_thr=60, spatial_thr=50, max_spee
     ref_p = None  # for stop detection
     first_iteration = True
 
+    p_index = 0
+    next_p_index = 0
+    ref_p_index = 0
+
     for i in range(0, len(alltraj)):
 
         next_p = alltraj[i]
+        next_p_index = i
 
         if first_iteration:  # first iteration
             p = next_p
+            p_index = next_p_index
             ref_p = p  # for stop detection
             traj = [p]
             length = 0.0
@@ -66,17 +73,22 @@ def segment_trajectories(alltraj, uid, temporal_thr=60, spatial_thr=50, max_spee
                                                 start_time=start_time, end_time=end_time))
 
                 # Create a new trajectory
+                traj = [p[:2] + [next_p[2]]]  # 1st fake point with last position previous traj and new timestamp
                 p = next_p
+                p_index = next_p_index
                 ref_p = p  # for stop detection
-                traj = [p]
+                ref_p_index = p_index
+                traj.append(p)
                 length = 0.0
                 tid += 1
                 is_a_new_traj = True
             else:
                 is_a_new_traj = False
                 p = next_p
+                p_index = next_p_index
                 if ref_distance > spatial_thr:
                     ref_p = p  # for stop detection
+                    ref_p_index = p_index
                 traj.append(p)
                 length += spatial_dist
 

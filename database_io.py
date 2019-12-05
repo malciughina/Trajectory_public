@@ -18,18 +18,13 @@ def get_connection():
     }
     properties = {
         'dbname': 'irpet',
-        'user': 'postgres',
+        'user': 'bonavita',
         'host': 'kddciuski.isti.cnr.it',  #'localhost', #'kddciuski.isti.cnr.it',
         'port': '5435',
-        'password': 'sergtsop',
+        'password': 'bonavita93',
     }
-    properties = {
-        'dbname': 'irpet',
-        'user': 'postgres',
-        'host': 'localhost',  #'localhost', #'kddciuski.isti.cnr.it',
-        'port': '4444',
-        'password': 'sergtsop',
-    }
+
+
     db_params = 'dbname=\'' + properties['dbname'] + '\' ' \
                 'user=\'' + properties['user'] + '\' ' \
                 'host=\'' + properties['host'] + '\' ' \
@@ -42,7 +37,7 @@ def get_connection():
 
 
 def extract_users_list(input_table, cur):
-    query = """SELECT DISTINCT(uid) AS uid FROM %s""" % input_table
+    query = """SELECT DISTINCT(uid) AS uid FROM %s LIMIT 1000""" % input_table
     cur.execute(query)
     rows = cur.fetchall()
 

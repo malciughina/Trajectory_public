@@ -12,6 +12,8 @@ def time_precision_score(alltraj, traj_list):
 def dist_coverage_score(alltraj, traj_list):
     allmoves_dist = np.sum([spherical_distance(alltraj[i + 1], alltraj[i]) for i in range(len(alltraj) - 1)])
     move_dist = np.sum([t.length() for t in traj_list])
+    # move_dist2 = np.sum([spherical_distance(traj_list[i + 1].start_point(), traj_list[i].end_point()) for i in range(len(traj_list) - 1)])
+    # move_dist += move_dist2
     # print('move_dist', move_dist, 'allmoves_dist', allmoves_dist, 'div', move_dist/allmoves_dist)
     return move_dist/allmoves_dist
 

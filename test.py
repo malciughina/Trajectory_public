@@ -57,8 +57,6 @@ def main():
 
         trajectories = imh['trajectories']
         alltraj = merge_trajectories(trajectories)
-        # print(len(alltraj))
-
         traj_list, user_temporal_thr = segment_trajectories_user_adaptive(alltraj, uid, temporal_thr=60, spatial_thr=50,
                                                                           max_speed=0.07, gap=60, max_lim=3600 * 48,
                                                                           window=15, smooth_fun=moving_median, min_size=10,

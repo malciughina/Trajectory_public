@@ -83,7 +83,10 @@ def segment_trajectories(alltraj, uid, temporal_thr=60, spatial_thr=50, max_spee
                 tid += 1
                 is_a_new_traj = True
             else:
+                if is_a_new_traj and len(traj) > 1:
+                    traj[1] = [traj[1][0], traj[1][1], traj[0][2] +int((next_p[2] - traj[0][2])/2)]
                 is_a_new_traj = False
+
                 p = next_p
                 p_index = next_p_index
                 if ref_distance > spatial_thr:
@@ -130,7 +133,7 @@ def segment_trajectories_random(alltraj, uid, nbr_traj_min=None, nbr_traj_max=No
             first_iteration = False
         else:  # all the others
             spatial_dist = spherical_distance(p, next_p)
-            if i % new_traj_marker == 0:
+            if i % new_traj_marker == 0 and new_traj_marker > 0:
                 if len(traj) > 1 and not is_a_new_traj:
                     start_time = traj[0][2]
                     end_time = traj[-1][2]
@@ -159,6 +162,62 @@ def segment_trajectories_random(alltraj, uid, nbr_traj_min=None, nbr_traj_max=No
                                     start_time=start_time, end_time=end_time))
 
     return traj_list
+
+
+def segment_trajectories_random2(alltraj, uid, nbr_traj):
+    new_traj_marker = int(len(alltraj) / nbr_traj)
+
+    traj_list = list()
+
+    tid = 0
+    traj = list()
+    is_a_new_traj = True
+    p = None
+    first_iteration = True
+    length = 0.0
+
+    for i in range(0, len(alltraj)):
+
+        next_p = alltraj[i]
+
+        if first_iteration:  # first iteration
+            p = next_p
+            traj = [p]
+            length = 0.0
+            is_a_new_traj = True
+            first_iteration = False
+        else:  # all the others
+            spatial_dist = spherical_distance(p, next_p)
+            if i % new_traj_marker == 0 and new_traj_marker > 0:
+                if len(traj) > 1 and not is_a_new_traj:
+                    start_time = traj[0][2]
+                    end_time = traj[-1][2]
+                    duration = end_time - start_time
+                    traj_list.append(Trajectory(id=tid, object=traj, vehicle=uid,
+                                                length=length, duration=duration,
+                                                start_time=start_time, end_time=end_time))
+
+                # Create a new trajectory
+                p = next_p
+                traj = [p]
+                length = 0.0
+                tid += 1
+                is_a_new_traj = True
+            else:
+                is_a_new_traj = False
+                p = next_p
+                traj.append(p)
+                length += spatial_dist
+
+    if len(traj) > 1 and not is_a_new_traj:
+        start_time = traj[0][2]
+        end_time = traj[-1][2]
+        duration = end_time - start_time
+        traj_list.append(Trajectory(id=tid, object=traj, vehicle=uid, length=length, duration=duration,
+                                    start_time=start_time, end_time=end_time))
+
+    return traj_list
+
 
 
 def get_stop_times(traj_list):

@@ -17,18 +17,18 @@ def get_connection():
         'password': 'password',
     }
     properties = {
-        'dbname': 'irpet',
-        'user': 'postgres',
-        'host': 'kddciuski.isti.cnr.it',  #'localhost', #'kddciuski.isti.cnr.it',
-        'port': '5435',
-        'password': 'sergtsop',
+        'dbname': '',
+        'user': '',
+        'host':'' ,  #'localhost', #'kddciuski.isti.cnr.it',
+        'port':'',
+        'password':'' ,
     }
     properties = {
-        'dbname': 'irpet',
-        'user': 'postgres',
-        'host': 'localhost',  #'localhost', #'kddciuski.isti.cnr.it',
-        'port': '4444',
-        'password': 'sergtsop',
+        'dbname': '',
+        'user': '',
+        'host': '',  #'localhost', #'kddciuski.isti.cnr.it',
+        'port': '',
+        'password': '',
     }
     db_params = 'dbname=\'' + properties['dbname'] + '\' ' \
                 'user=\'' + properties['user'] + '\' ' \
